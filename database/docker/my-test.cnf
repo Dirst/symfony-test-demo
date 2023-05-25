@@ -1,0 +1,6 @@
+[mysqld]
+
+wait_timeout=100000
+max_connections=400
+
+sql_mode=TRADITIONAL
