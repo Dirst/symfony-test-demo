@@ -4,6 +4,6 @@ namespace App\Payment;
 
 enum PaymentEnum: string
 {
-    case PAYPAL = 'PAYPAL';
-    case STRIPE = 'STRIPE';
+    case PAYPAL = 'paypal';
+    case STRIPE = 'stripe';
 }

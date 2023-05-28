@@ -14,7 +14,7 @@ class CheckoutDto
         public readonly string $taxCode,
         #[Assert\Type('string')]
         public readonly string $coupon = '',
-        public readonly ?PaymentEnum $paymentType = null
+        public readonly ?PaymentEnum $paymentProcessor = null
     ) {
     }
 }

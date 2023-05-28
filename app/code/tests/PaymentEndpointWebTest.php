@@ -33,7 +33,7 @@ class PaymentEndpointWebTest extends WebTestCase
                 "productId" => 1,
                 "taxCode" => "TAX",
                 "coupon" => "COUPON",
-                "paymentType" => "PAYPAL"
+                "paymentProcessor" => "paypal"
             ]
         );
 
@@ -54,7 +54,7 @@ class PaymentEndpointWebTest extends WebTestCase
                 "productId" => 1,
                 "taxCode" => "DE111222333",
                 "coupon" => "COUPON1",
-                "paymentType" => "STRIPE"
+                "paymentProcessor" => "stripe"
             ]
         );
 
@@ -73,7 +73,7 @@ class PaymentEndpointWebTest extends WebTestCase
                 "productId" => 1,
                 "taxCode" => "DE111222333",
                 "coupon" => "COUPON2",
-                "paymentType" => "PAYPAL"
+                "paymentProcessor" => "paypal"
             ]
         );
 

@@ -7,6 +7,7 @@ services:
     volumes:
       - ./app/code:/var/www:cached
       - ./app/docker/init.sh:/docker-init/init.sh
+      - ./app/docker/wait-for-it.sh:/docker-init/wait-for-it.sh
       - ./app/docker/ini/php.ini:/usr/local/etc/php/php.ini
       - ./app/docker/ini/php-cli.ini:/usr/local/etc/php/php-cli.ini
       - ./app/docker/ini/zcustom-fpm.conf:/usr/local/etc/php-fpm.d/zcustom-fpm.conf

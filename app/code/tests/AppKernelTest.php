@@ -37,10 +37,10 @@ class AppKernelTest extends KernelTestCase
             [],
             [],
             [],
-            '{"productId": 1, "taxCode": "TAX", "coupon": "COUPON", "paymentType": "PAYPAL"}'
+            '{"productId": 1, "taxCode": "TAX", "coupon": "COUPON", "paymentProcessor": "paypal"}'
         );
 
         $dto = $this->requestCheckoutParser->getCheckoutDtoFromPostRequest($request);
-        $this->assertEquals(new CheckoutDto(1, 'TAX', 'COUPON', PaymentEnum::from("PAYPAL")), $dto);
+        $this->assertEquals(new CheckoutDto(1, 'TAX', 'COUPON', PaymentEnum::from("paypal")), $dto);
     }
 }

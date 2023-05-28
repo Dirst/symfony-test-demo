@@ -3,11 +3,8 @@
 namespace App\Controller;
 
 use App\Dto\CheckoutDto;
-use App\Payment\PaymentEnum;
 use App\Payment\PaymentProcessorFactory;
-use App\Price\Price;
 use App\Service\CheckoutPriceResolver;
-use App\Service\CheckoutRequestValidator;
 use App\Service\RequestCheckoutParser;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -15,6 +12,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
+/**
+ * @TODO extract services to application layer from actions.
+ */
 class ApiController extends AbstractController
 {
     #[Filters('productId*', 'taxNumber*', 'couponCode')]
@@ -36,7 +36,7 @@ class ApiController extends AbstractController
         }
     }
 
-    #[JsonContent('productId*', 'taxNumber*', 'couponCode', 'paymentType*')]
+    #[JsonContent('productId*', 'taxNumber*', 'couponCode', 'paymentProcessor*')]
     #[Route('/pay', methods: ['POST'])]
     public function pay(
         Request $request,
@@ -66,7 +66,7 @@ class ApiController extends AbstractController
     ): void {
         $price = $checkoutPriceResolver->getPriceAfterDeductions($checkoutDto);
 
-        $paymentProcessor = $paymentProcessorFactory->get($checkoutDto->paymentType);
+        $paymentProcessor = $paymentProcessorFactory->get($checkoutDto->paymentProcessor);
         $paymentProcessor->pay($price);
     }
 
