@@ -17,18 +17,22 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  */
 class ApiController extends AbstractController
 {
+    public function __construct(
+        public readonly RequestCheckoutParser $requestCheckoutParser,
+        public readonly CheckoutPriceResolver $checkoutPriceResolver,
+        public readonly ValidatorInterface $validator,
+        public readonly PaymentProcessorFactory $paymentProcessorFactory
+    ) {
+    }
+
     #[Filters('productId*', 'taxNumber*', 'couponCode')]
     #[Route('/get-price', methods: ['GET'])]
-    public function getPrice(
-        Request $request,
-        RequestCheckoutParser $requestCheckoutParser,
-        CheckoutPriceResolver $checkoutPriceResolver,
-        ValidatorInterface $validator,
-    ): JsonResponse {
+    public function getPrice(Request $request): JsonResponse
+    {
         try {
-            $checkoutDto = $requestCheckoutParser->getCheckoutDtoFromGetRequest($request);
-            $this->validateCheckoutDto($validator, $checkoutDto);
-            $price = $checkoutPriceResolver->getPriceAfterDeductions($checkoutDto);
+            $checkoutDto = $this->requestCheckoutParser->getCheckoutDtoFromGetRequest($request);
+            $this->validateCheckoutDto($checkoutDto);
+            $price = $this->checkoutPriceResolver->getPriceAfterDeductions($checkoutDto);
 
             return $this->json(['price' => round($price, 1)]);
         } catch (\Exception $exception) {
@@ -38,17 +42,12 @@ class ApiController extends AbstractController
 
     #[JsonContent('productId*', 'taxNumber*', 'couponCode', 'paymentProcessor*')]
     #[Route('/pay', methods: ['POST'])]
-    public function pay(
-        Request $request,
-        PaymentProcessorFactory $paymentProcessorFactory,
-        CheckoutPriceResolver $checkoutPriceResolver,
-        RequestCheckoutParser $requestCheckoutParser,
-        ValidatorInterface $validator
-    ): JsonResponse {
+    public function pay(Request $request): JsonResponse
+    {
         try {
-            $checkoutDto = $requestCheckoutParser->getCheckoutDtoFromPostRequest($request);
-            $this->validateCheckoutDto($validator, $checkoutDto);
-            $this->executePayment($checkoutDto, $paymentProcessorFactory, $checkoutPriceResolver);
+            $checkoutDto = $this->requestCheckoutParser->getCheckoutDtoFromPostRequest($request);
+            $this->validateCheckoutDto($checkoutDto);
+            $this->executePayment($checkoutDto);
 
             return $this->json(['message' =>'payment success']);
         } catch (\Exception $exception) {
@@ -59,23 +58,20 @@ class ApiController extends AbstractController
     /**
      * @TODO need to remove it from presentation layer into Application layer.
      */
-    protected function executePayment(
-        CheckoutDto $checkoutDto,
-        PaymentProcessorFactory $paymentProcessorFactory,
-        CheckoutPriceResolver $checkoutPriceResolver
-    ): void {
-        $price = $checkoutPriceResolver->getPriceAfterDeductions($checkoutDto);
+    protected function executePayment(CheckoutDto $checkoutDto): void
+    {
+        $price = $this->checkoutPriceResolver->getPriceAfterDeductions($checkoutDto);
 
-        $paymentProcessor = $paymentProcessorFactory->get($checkoutDto->paymentProcessor);
+        $paymentProcessor = $this->paymentProcessorFactory->get($checkoutDto->paymentProcessor);
         $paymentProcessor->pay($price);
     }
 
     /**
      * @TODO need to remove it from presentation layer into Application layer.
      */
-    protected function validateCheckoutDto(ValidatorInterface $validator, CheckoutDto $checkoutDto): void
+    protected function validateCheckoutDto(CheckoutDto $checkoutDto): void
     {
-        $errors = $validator->validate($checkoutDto);
+        $errors = $this->validator->validate($checkoutDto);
         if (count($errors) == 0) {
             return;
         }
