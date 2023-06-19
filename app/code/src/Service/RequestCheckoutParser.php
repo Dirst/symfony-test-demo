@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Dto\CheckoutDto;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Serializer\SerializerInterface;
 
 class RequestCheckoutParser
@@ -18,11 +19,11 @@ class RequestCheckoutParser
         $taxNumber = $request->query->get('taxNumber');
 
         if (!$productId or !$taxNumber) {
-            throw new \Exception("Product ID or Tax Number has not been passed in GET request");
+            throw new BadRequestHttpException("Product ID or Tax Number has not been passed in GET request");
         }
 
         if (!is_numeric($productId)) {
-            throw new \Exception("Product ID should be integer");
+            throw new BadRequestHttpException("Product ID should be integer");
         }
 
         $coupon = $request->query->get('couponCode') ?? '';

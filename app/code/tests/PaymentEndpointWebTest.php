@@ -14,7 +14,7 @@ class PaymentEndpointWebTest extends WebTestCase
 
     public function testPostParametersAbsenceErrors(): void
     {
-        $this->client->request('POST', '/pay', [], [], [], '{}');
+        $this->client->jsonRequest('POST', '/pay', parameters: []);
 
         $this->assertEquals(
             '{"message":"Cannot create an instance of \u0022App\\\Dto\\\CheckoutDto\u0022 from serialized data because its constructor requires parameter \u0022productId\u0022 to be present."}',

@@ -27,5 +27,12 @@ services:
     App\Payment\:
         resource: '../src/Payment/*Payment.php'
         public: true
+
+    App\ValueResolver\CheckoutDtoResolver:
+        tags:
+            - { name: controller.argument_value_resolver, priority: 150 }
+
+    App\EventListener\ExceptionListener:
+        tags: [ kernel.event_listener ]
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

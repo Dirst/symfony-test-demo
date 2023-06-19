@@ -17,7 +17,7 @@ class GetPriceEndpointWebTest extends WebTestCase
 
     public function testParametersAbsenceErrors(): void
     {
-        $this->client->request('GET', '/get-price');
+        $this->client->jsonRequest('GET', '/get-price');
 
         $this->assertEquals(
             '{"message":"Product ID or Tax Number has not been passed in GET request"}',
@@ -29,14 +29,23 @@ class GetPriceEndpointWebTest extends WebTestCase
 
     public function testParametersValidation(): void
     {
-        $this->client->request('GET', '/get-price?productId=1&taxNumber=21231&couponCode=CODE');
+        $this->client->jsonRequest(
+            'GET',
+            '/get-price?productId=1&taxNumber=21231&couponCode=CODE'
+        );
 
-        $this->assertEquals('{"message":"taxCode: This value is not valid."}', $this->client->getResponse()->getContent());
+        $this->assertEquals(
+            '{"message":"taxCode: This value is not valid."}',
+            $this->client->getResponse()->getContent()
+        );
     }
 
     public function testPriceCalcFixedCoupon(): void
     {
-        $this->client->request('GET', '/get-price?productId=1&taxNumber=DE121212&couponCode=COUPON1');
+        $this->client->jsonRequest(
+            'GET',
+            '/get-price?productId=1&taxNumber=DE121212&couponCode=COUPON1'
+        );
 
         $priceExpected = (100 - 20) * 1.19;
 
@@ -46,7 +55,10 @@ class GetPriceEndpointWebTest extends WebTestCase
 
     public function testPriceCalcPercentCoupon(): void
     {
-        $this->client->request('GET', '/get-price?productId=2&taxNumber=IT121212&couponCode=COUPON2');
+        $this->client->jsonRequest(
+            'GET',
+            '/get-price?productId=2&taxNumber=IT121212&couponCode=COUPON2'
+        );
 
         $priceExpected = (20 * 0.95) * 1.22;
 
