@@ -18,6 +18,6 @@ class PaymentResolver
         $price = $this->priceResolver->getPriceAfterDeductions($checkoutDto);
 
         $paymentProcessor = $this->processorFactory->get($checkoutDto->paymentProcessor);
-        $paymentProcessor->pay($price);
+        $paymentProcessor->pay(round($price));
     }
 }

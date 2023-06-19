@@ -13,9 +13,9 @@ class StripePayment implements PaymentProcessorInterface
     {
     }
 
-    public function pay(float $price): void
+    public function pay(int $price): void
     {
-        $paymentResult = $this->stripePayment->processPayment((int) $price);
+        $paymentResult = $this->stripePayment->processPayment($price);
 
         // Adapt for explicit erroring.
         if (!$paymentResult) {

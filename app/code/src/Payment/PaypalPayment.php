@@ -13,8 +13,8 @@ class PaypalPayment implements PaymentProcessorInterface
     {
     }
 
-    public function pay(float $price): void
+    public function pay(int $price): void
     {
-        $this->paypalPayment->pay((int) $price);
+        $this->paypalPayment->pay($price);
     }
 }
