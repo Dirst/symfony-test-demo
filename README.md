@@ -5,8 +5,8 @@
 Данные из ТЗ уже загружены в базу.
 
 # Endpoints
-Расчет цены - `/get-price` c GET параметрами `'productId*', 'taxNumber*', 'couponCode'`
-Оплата - `/pay` c POST json 
+- Расчет цены - `/get-price` c GET параметрами `'productId*', 'taxNumber*', 'couponCode'`
+- Оплата - `/pay` c POST json 
 
 ```
 {
